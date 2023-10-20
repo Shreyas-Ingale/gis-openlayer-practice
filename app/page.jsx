@@ -26,7 +26,7 @@ const Home = () => {
   proj4.defs("EPSG:32643", "+proj=utm +zone=43 +datum=WGS84 +units=m +no_defs");
   register(proj4);
 
-  const [zoom] = useState(0);
+  const [zoom] = useState(11);
   const [center] = useState([73.789803, 19.997454]);
   const [projection] = useState("EPSG:3857");
 
