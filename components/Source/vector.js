@@ -1,9 +1,11 @@
 "use client";
 import VectorSource from 'ol/source/Vector';
 
-function vector({ features }) {
+function vector({ features, format, url }) {
 	return new VectorSource({
-		features
+		features,
+		format,
+		url
 	});
 }
 

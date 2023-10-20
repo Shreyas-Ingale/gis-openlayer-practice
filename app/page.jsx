@@ -1,23 +1,32 @@
 "use client";
 import { MapProvider } from "@components/Map/MapProvider"; //map component
+
 import Layers from "@components/Layers/Layers";
 import TileLayer from "@components/Layers/TileLayer";
 import ImageLayer from "@components/Layers/ImageLayer";
 import VectorLayer from "@components/Layers/VectorLayer";
+import HeatMapLayer from "@components/Layers/HeatMapLayer";
+import Graticule from "@components/Graticule/Graticule";
+
 import OSM from "@components/Source/osm";
 import Vector from "@components/Source/vector";
 import TileWMS from "@components/Source/tilewms";
 import ImageWMS from "@components/Source/imagewms";
 import StadiaMaps from "@components/Source/stadiamaps";
 import ImageStatic from "@components/Source/imagestatic";
-import Feature from "ol/Feature";
-import { fromLonLat } from "ol/proj";
-import { Point } from "ol/geom";
-import { Style, Icon } from "ol/style";
-import { register } from "ol/proj/proj4";
-import proj4 from "proj4";
-import { useState } from "react";
+import FeatureStyles from "@components/Features/Styles";
+
 import "ol/ol.css";
+import proj4 from "proj4";
+import { register } from "ol/proj/proj4";
+import Feature from "ol/Feature";
+import { fromLonLat, get } from "ol/proj";
+import { Point } from "ol/geom";
+import { Style, Icon, Fill, Stroke } from "ol/style";
+import GeoJSON from "ol/format/GeoJSON";
+import geoJsonObject from "geoJson.json";
+
+import { useState } from "react";
 
 const Home = () => {
   // maptilers apikey
@@ -26,47 +35,99 @@ const Home = () => {
   proj4.defs("EPSG:32643", "+proj=utm +zone=43 +datum=WGS84 +units=m +no_defs");
   register(proj4);
 
-  const [zoom] = useState(11);
+  const [zoom] = useState(10);
   const [center] = useState([73.789803, 19.997454]);
   const [projection] = useState("EPSG:3857");
 
   // options for StaticImage
-  const imageOptions = {
-    attributions: "<b>Flamingo</b>",
-    url: "/assets/images/flamingo.png",
-    imageExtent: [
-      8248544.51451, 2274877.516589555, 8251856.941373372, 2277249.182601516,
-    ],
-  };
+  // const imageOptions = {
+  //   attributions: "<b>Flamingo</b>",
+  //   url: "/assets/images/flamingo.png",
+  //   imageExtent: [
+  //     8248544.51451, 2274877.516589555, 8251856.941373372, 2277249.182601516,
+  //   ],
+  // };
 
   // feature and its style for vector layer
-  let feature = new Feature({
-    geometry: new Point(fromLonLat([74.131, 20.028])),
-  });
-  let style = new Style({
-    image: new Icon({
-      src: "/assets/images/flamingo.png",
-      scale: 0.09,
-    }),
-  });
-  feature.setStyle(style);
+  // let feature = new Feature({
+  //   geometry: new Point(fromLonLat([74.131, 20.028])),
+  // });
+  // let style = new Style({
+  //   image: new Icon({
+  //     src: "/assets/images/flamingo.png",
+  //     scale: 0.09,
+  //   }),
+  // });
+  // feature.setStyle(style);
 
   // options for tilewms source
-  let tileWMSOptions = {
-    url: "https://ahocevar.com/geoserver/wms",
-    params: { LAYERS: "topp:states", TILED: true },
-    serverType: "geoserver",
-    // Countries have transparency, so do not fade tiles:
-    transition: 0,
-  };
+  // let tileWMSOptions = {
+  //   url: "https://ahocevar.com/geoserver/wms",
+  //   params: { LAYERS: "topp:states", TILED: true },
+  //   serverType: "geoserver",
+  //   // Countries have transparency, so do not fade tiles:
+  //   transition: 0,
+  // };
 
   // options for imagewms source
-  let imageWMSOptions = {
-    url: "https://ahocevar.com/geoserver/wms",
-    params: { LAYERS: "topp:states" },
-    ratio: 1,
-    serverType: "geoserver",
-  };
+  // let imageWMSOptions = {
+  //   url: "https://ahocevar.com/geoserver/wms",
+  //   params: { LAYERS: "topp:states" },
+  //   ratio: 1,
+  //   serverType: "geoserver",
+  // };
+
+  // options for VectorLayer for geoJsonObject
+  // const vectorOptions = {
+  //   features: (new GeoJSON().readFeatures(geoJsonObject, {
+  //     featureProjection: get("EPSG:3857"),
+  //   }))
+  // }
+
+  // options and styles for VectorLayer for geoJsonObject from a url/restApi/geoserver
+//   const vectorOptions = {
+//     format: new GeoJSON({featureProjection: get("EPSG:3857")}),
+//     url: "polygon.json",
+//   };
+//   const polygonsStyle = function(feature){
+//     if(feature.getProperties().shape === 'rectangle'){
+//         return new Style({
+//                 fill : new Fill({
+//                     color: 'rgba(128, 128, 128, 0.1)'
+//                 }),
+//                 stroke: new Stroke({
+//                     color:'grey',
+//                     width:2
+//                 })
+//             })
+//     } else  if(feature.getProperties().shape === 'circle'){
+//         return new Style({
+//                 fill : new Fill({
+//                     color: 'rgba(128, 0, 0, 0.1)'
+//                 }),
+//                 stroke: new Stroke({
+//                     color:'maroon',
+//                     width:2
+//                 })
+//             })
+//     } else{
+//         return new Style({
+//             fill : new Fill({
+//                 color: 'rgba(30, 144, 255, 0.1)'
+//             }),
+//             stroke: new Stroke({
+//                 color:'dodgerblue',
+//                 width:2
+//             })
+//         })
+//     }
+// }
+
+  //options for HeatMapLayer's vector source
+  // let heatMapOptions = {
+  //   format: new GeoJSON({featureProjection: get("EPSG:3857")}),
+  //   url: "police.geojson",
+  // }
 
   return (
     <section className="w-full flex-center flex-col">
@@ -84,11 +145,15 @@ const Home = () => {
       >
         <Layers>
           <TileLayer source={OSM()} />
+          {/* <Graticule showLabels={true} /> */}
           {/* <TileLayer source={StadiaMaps({ layer: 'stamen_toner' })} /> */}
           {/* <ImageLayer source={ImageStatic(imageOptions)} /> */}
           {/* <VectorLayer source={Vector({ features: [feature] })}/> */}
           {/* <TileLayer extent={[-13884991, 2870341, -7455066, 6338219]} source={TileWMS(tileWMSOptions)} /> */}
           {/* <ImageLayer extent={[-13884991, 2870341, -7455066, 6338219]} source={ImageWMS(imageWMSOptions)} /> */}
+          {/* <VectorLayer source={Vector(vectorOptions)} style={FeatureStyles.Line}/> */}
+          {/* <VectorLayer source={Vector(vectorOptions)} style={polygonsStyle} /> */}
+          {/* <HeatMapLayer source={Vector(heatMapOptions)} blur={5} gradient={['red', 'purple', 'green', 'dodgerblue']} /> */}
         </Layers>
       </MapProvider>
     </section>

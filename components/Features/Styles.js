@@ -10,14 +10,22 @@ const style =  {
       }),
     }),
   }),
+  Line: new Style({
+    stroke: new Stroke({
+      color: "dodgerblue",
+      lineDash: [10, 5], // 1st: length of line , 2nd length of empty space
+      width: 3,
+      lineCap: "butt",
+      lineJoin: "round"
+    }),
+  }),
   Polygon: new Style({
     stroke: new Stroke({
-      color: "blue",
-      lineDash: [4],
-      width: 3,
+      color: "dodgerblue",
+      width: 2,
     }),
     fill: new Fill({
-      color: "rgba(0, 0, 255, 0.1)",
+      color: "rgba(30, 144, 255, 0.1)",
     }),
   }),
   PointPolygon: new Style({

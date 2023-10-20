@@ -1,10 +1,10 @@
 "use client";
 import { useContext, useEffect } from "react";
-import {MapContext} from "@components/Map/MapContext";
+import { MapContext } from "@components/Map/MapContext";
 import OLVectorLayer from "ol/layer/Vector";
 
-const VectorLayer = ({ source, style = {}, zIndex = 0 }) => {
-	const {map} = useContext(MapContext);
+const VectorLayer = ({ source, style, zIndex = 0 }) => {
+	const { map } = useContext(MapContext);
 
 	useEffect(() => {
 		if (!map) return;
@@ -22,7 +22,7 @@ const VectorLayer = ({ source, style = {}, zIndex = 0 }) => {
 				map.removeLayer(vectorLayer);
 			}
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [map]);
 
 	return null;
